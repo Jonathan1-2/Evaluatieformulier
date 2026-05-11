@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evaluatie Einde Proeftijdgesprek</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #2E7D32;
+      --green-light: #E8F5E9;
+      --green-mid: #4CAF50;
+      --green-dark: #1B5E20;
+      --text: #1a1a1a;
+      --text-muted: #555;
+      --border: #d4d4d4;
+      --bg: #f7f6f2;
+      --card: #ffffff;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .page-wrapper {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 2.5rem;
+    }
+
+    .header-bar {
+      width: 48px;
+      height: 4px;
+      background: var(--green);
+      border-radius: 2px;
+      margin-bottom: 1.2rem;
+    }
+
+    header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--green-dark);
+      line-height: 1.2;
+    }
+
+    header p {
+      margin-top: 0.5rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--green);
+    }
+
+    .card-title {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 1.2rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 520px) {
+      .meta-grid { grid-template-columns: 1fr; }
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    input[type="text"],
+    input[type="date"],
+    textarea {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fafafa;
+      color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+
+    input[type="text"]:focus,
+    input[type="date"]:focus,
+    textarea:focus {
+      border-color: var(--green-mid);
+      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
+      background: #fff;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+      line-height: 1.6;
+    }
+
+    .section-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 1.8rem 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .section-number {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      background: var(--green);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.15rem;
+      font-weight: 400;
+      color: var(--green-dark);
+    }
+
+    .question-list {
+      list-style: none;
+      margin-bottom: 1.2rem;
+    }
+
+    .question-list li {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      padding: 0.4rem 0 0.4rem 1.2rem;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .question-list li::before {
+      content: '–';
+      position: absolute;
+      left: 0;
+      color: var(--green-mid);
+    }
+
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .score-label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .score-buttons {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .score-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: #fafafa;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      color: var(--text-muted);
+    }
+
+    .score-btn:hover {
+      border-color: var(--green-mid);
+      color: var(--green);
+    }
+
+    .score-btn.selected {
+      background: var(--green);
+      border-color: var(--green);
+      color: white;
+    }
+
+    .score-input {
+      display: none;
+    }
+
+    .antwoord-group {
+      margin-top: 1rem;
+    }
+
+    .antwoord-group label {
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    .afspraken-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 1.8rem 2rem;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--green);
+    }
+
+    .submit-area {
+      text-align: center;
+      padding: 1.5rem 0;
+    }
+
+    .submit-btn {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--green);
+      color: white;
+      border: none;
+      padding: 0.9rem 3rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.02em;
+    }
+
+    .submit-btn:hover { background: var(--green-dark); }
+    .submit-btn:active { transform: scale(0.97); }
+    .submit-btn:disabled { background: #aaa; cursor: default; }
+
+    .status-msg {
+      margin-top: 1rem;
+      font-size: 0.92rem;
+      min-height: 1.4em;
+    }
+
+    .status-msg.success { color: var(--green); font-weight: 500; }
+    .status-msg.error   { color: #c62828; }
+
+    .config-notice {
+      background: #fff8e1;
+      border: 1px solid #ffe082;
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 2rem;
+      font-size: 0.88rem;
+      color: #5d4037;
+      line-height: 1.6;
+    }
+
+    .config-notice strong { color: #e65100; }
+    .config-notice code {
+      background: #fff3e0;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <div class="config-notice">
+    ⚙️ <strong>Configuratie vereist:</strong> Vervang in de JavaScript onderaan
+    <code>JOUW_PUBLIC_KEY</code>, <code>JOUW_SERVICE_ID</code> en <code>JOUW_TEMPLATE_ID</code>
+    door jouw eigen EmailJS-gegevens. Zie de README voor instructies.
+  </div>
+
+  <header>
+    <div class="header-bar"></div>
+    <h1>Evaluatie Einde Proeftijdgesprek</h1>
+    <p>Vul dit formulier in aan het einde van de proeftijd. De antwoorden worden direct doorgestuurd.</p>
+  </header>
+
+  <form id="evalForm" novalidate>
+
+    <!-- Gegevens -->
+    <div class="card">
+      <div class="card-title">Gegevens</div>
+      <div class="meta-grid">
+        <div class="field-group">
+          <label for="naam_yp">Junior payroll professional</label>
+          <input type="text" id="naam_yp" name="naam_yp" required placeholder="Naam">
+        </div>
+        <div class="field-group">
+          <label for="naam_consultant">Consultant / leidinggevende</label>
+          <input type="text" id="naam_consultant" name="naam_consultant" required placeholder="Naam">
+        </div>
+        <div class="field-group">
+          <label for="opdrachtgever">Opdrachtgever</label>
+          <input type="text" id="opdrachtgever" name="opdrachtgever" required placeholder="Naam organisatie">
+        </div>
+        <div class="field-group">
+          <label for="datum">Datum</label>
+          <input type="date" id="datum" name="datum" required>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sectie 1 -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <div class="section-title">Reflectie op samenwerking en cultuur</div>
+      </div>
+      <ul class="question-list">
+        <li>Hoe ervaar je de samenwerking met collega's en je leidinggevende?</li>
+        <li>Voel je je welkom en onderdeel van het team?</li>
+        <li>Zijn er dingen die je mist in de onboarding of communicatie?</li>
+      </ul>
+      <div class="antwoord-group">
+        <label for="antwoord_1">Toelichting</label>
+        <textarea id="antwoord_1" name="antwoord_1" placeholder="Jouw antwoord…"></textarea>
+      </div>
+      <div class="score-row">
+        <span class="score-label">Cijfer (1–10):</span>
+        <div class="score-buttons" id="score1-btns"></div>
+        <input type="hidden" name="score_1" id="score_1">
+      </div>
+    </div>
+
+    <!-- Sectie 2 -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <div class="section-title">Verwachtingen en rol</div>
+      </div>
+      <ul class="question-list">
+        <li>Is de functie zoals je had verwacht?</li>
+        <li>Zijn de taken en verantwoordelijkheden duidelijk voor je?</li>
+        <li>Waar zie je nog onduidelijkheden of behoefte aan begeleiding?</li>
+      </ul>
+      <div class="antwoord-group">
+        <label for="antwoord_2">Toelichting</label>
+        <textarea id="antwoord_2" name="antwoord_2" placeholder="Jouw antwoord…"></textarea>
+      </div>
+      <div class="score-row">
+        <span class="score-label">Cijfer (1–10):</span>
+        <div class="score-buttons" id="score2-btns"></div>
+        <input type="hidden" name="score_2" id="score_2">
+      </div>
+    </div>
+
+    <!-- Sectie 3 -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <div class="section-title">Ontwikkeling en toekomst</div>
+      </div>
+      <ul class="question-list">
+        <li>Waar zou je je graag verder in willen ontwikkelen?</li>
+        <li>Zijn er trainingen, tools of ondersteuning die je mist?</li>
+        <li>Hoe zie je jouw rol zich ontwikkelen binnen het team?</li>
+      </ul>
+      <div class="antwoord-group">
+        <label for="antwoord_3">Toelichting</label>
+        <textarea id="antwoord_3" name="antwoord_3" placeholder="Jouw antwoord…"></textarea>
+      </div>
+      <div class="score-row">
+        <span class="score-label">Cijfer (1–10):</span>
+        <div class="score-buttons" id="score3-btns"></div>
+        <input type="hidden" name="score_3" id="score_3">
+      </div>
+    </div>
+
+    <!-- Sectie 4 -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <div class="section-title">Praktische zaken</div>
+      </div>
+      <ul class="question-list">
+        <li>Zijn er praktische zaken die je belemmeren in je werk (systemen, werkplek, toegang tot informatie)?</li>
+        <li>Heb je alles wat je nodig hebt om je werk goed te doen?</li>
+      </ul>
+      <div class="antwoord-group">
+        <label for="antwoord_4">Toelichting</label>
+        <textarea id="antwoord_4" name="antwoord_4" placeholder="Jouw antwoord…"></textarea>
+      </div>
+      <div class="score-row">
+        <span class="score-label">Cijfer (1–10):</span>
+        <div class="score-buttons" id="score4-btns"></div>
+        <input type="hidden" name="score_4" id="score_4">
+      </div>
+    </div>
+
+    <!-- Sectie 5 -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <div class="section-title">Feedback aan organisatie</div>
+      </div>
+      <ul class="question-list">
+        <li>Heb je suggesties voor verbetering van het onboardingsproces?</li>
+        <li>Zijn er dingen die je graag anders zou zien in de samenwerking of structuur?</li>
+      </ul>
+      <div class="antwoord-group">
+        <label for="antwoord_5">Toelichting</label>
+        <textarea id="antwoord_5" name="antwoord_5" placeholder="Jouw antwoord…"></textarea>
+      </div>
+      <div class="score-row">
+        <span class="score-label">Cijfer (1–10):</span>
+        <div class="score-buttons" id="score5-btns"></div>
+        <input type="hidden" name="score_5" id="score_5">
+      </div>
+    </div>
+
+    <!-- Sectie 6 -->
+    <div class="afspraken-card">
+      <div class="card-title">6 — Afspraken en vervolgstappen</div>
+      <div class="field-group">
+        <label for="afspraken">Noteer hier de gemaakte afspraken</label>
+        <textarea id="afspraken" name="afspraken" style="min-height: 120px;" placeholder="Afspraken en vervolgstappen…"></textarea>
+      </div>
+    </div>
+
+    <div class="submit-area">
+      <button type="submit" class="submit-btn" id="submitBtn">Evaluatie versturen</button>
+      <div class="status-msg" id="statusMsg"></div>
+    </div>
+
+  </form>
+</div>
+
+<script>
+  // ─── EmailJS configuratie ──────────────────────────────────────────────────
+  const EMAILJS_PUBLIC_KEY  = 'JOUW_PUBLIC_KEY';   // ← vervangen
+  const EMAILJS_SERVICE_ID  = 'JOUW_SERVICE_ID';   // ← vervangen
+  const EMAILJS_TEMPLATE_ID = 'JOUW_TEMPLATE_ID';  // ← vervangen
+  // ──────────────────────────────────────────────────────────────────────────
+
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+  // Genereer score-knoppen 1–10
+  [1,2,3,4,5].forEach(n => {
+    const container = document.getElementById(`score${n}-btns`);
+    for (let i = 1; i <= 10; i++) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = i;
+      btn.className = 'score-btn';
+      btn.dataset.score = i;
+      btn.dataset.group = n;
+      btn.addEventListener('click', () => {
+        container.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        document.getElementById(`score_${n}`).value = i;
+      });
+      container.appendChild(btn);
+    }
+  });
+
+  // Formulier versturen
+  document.getElementById('evalForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const msg = document.getElementById('statusMsg');
+
+    // Valideer verplichte velden
+    const naam = document.getElementById('naam_yp').value.trim();
+    const datum = document.getElementById('datum').value;
+    if (!naam || !datum) {
+      msg.textContent = 'Vul minimaal de naam en datum in.';
+      msg.className = 'status-msg error';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Versturen…';
+    msg.textContent = '';
+    msg.className = 'status-msg';
+
+    const fd = new FormData(this);
+    const templateParams = {
+      naam_yp:         fd.get('naam_yp')         || '—',
+      naam_consultant: fd.get('naam_consultant')  || '—',
+      opdrachtgever:   fd.get('opdrachtgever')    || '—',
+      datum:           fd.get('datum')            || '—',
+      antwoord_1:      fd.get('antwoord_1')       || '—',
+      score_1:         fd.get('score_1')          || 'niet ingevuld',
+      antwoord_2:      fd.get('antwoord_2')       || '—',
+      score_2:         fd.get('score_2')          || 'niet ingevuld',
+      antwoord_3:      fd.get('antwoord_3')       || '—',
+      score_3:         fd.get('score_3')          || 'niet ingevuld',
+      antwoord_4:      fd.get('antwoord_4')       || '—',
+      score_4:         fd.get('score_4')          || 'niet ingevuld',
+      antwoord_5:      fd.get('antwoord_5')       || '—',
+      score_5:         fd.get('score_5')          || 'niet ingevuld',
+      afspraken:       fd.get('afspraken')        || '—',
+    };
+
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+      msg.textContent = '✓ Evaluatie succesvol verstuurd. Bedankt!';
+      msg.className = 'status-msg success';
+      btn.textContent = 'Verstuurd ✓';
+    } catch (err) {
+      console.error(err);
+      msg.textContent = 'Er ging iets mis. Controleer de EmailJS-configuratie.';
+      msg.className = 'status-msg error';
+      btn.disabled = false;
+      btn.textContent = 'Opnieuw proberen';
+    }
+  });
+</script>
+</body>
+</html>
